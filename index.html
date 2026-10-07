@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة أ/ عبد العزيز عمر للرياضيات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
+            --math-gold: #f59e0b;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: #334155;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            direction: rtl;
+            min-height: 100vh;
+        }
+
+        /* شاشة تسجيل الدخول */
+        .login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 35px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .login-box .math-badge {
+            background: linear-gradient(135deg, var(--accent-color), var(--math-gold));
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            margin: 0 auto 15px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: var(--text-sub);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        /* الواجهة الرئيسية للمنصة */
+        .navbar {
+            background-color: var(--card-bg);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-text h1 {
+            font-size: 18px;
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: var(--math-gold);
+            font-weight: bold;
+        }
+
+        .app-layout {
+            display: flex;
+            min-height: calc(100vh - 75px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--card-bg);
+            border-left: 1px solid var(--border-color);
+            padding: 20px 10px;
+        }
+
+        .nav-item {
+            color: var(--text-sub);
+            padding: 12px 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            border-right: 4px solid var(--accent-color);
+            padding-right: 12px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card h3 {
+            color: var(--math-gold);
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: var(--text-sub);
+            font-size: 13px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        /* واجهة الامتحان التفاعلي */
+        .quiz-modal {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-sub);
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .question-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option-btn {
+            background: var(--bg-main);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 14px;
+            border-radius: 8px;
+            text-align: right;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .option-btn:hover, .option-btn.selected {
+            border-color: var(--accent-color);
+            background: #334155;
+        }
+
+        /* جدول المتابعة للأستاذ */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .students-table th, .students-table td {
+            padding: 14px 18px;
+            text-align: right;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .students-table th {
+            background: #0f172a;
+            color: var(--math-gold);
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge.success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .badge.danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 768px) {
+            .app-layout { flex-direction: column; }
+            .sidebar { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. شاشة تسجيل الدخول -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-box">
+            <div class="math-badge">∑π</div>
+            <h2>منصة أ/ عبد العزيز عمر</h2>
+            <p style="color: var(--text-sub); font-size: 13px; margin-bottom: 25px;">رياضيات - المرحلة الإعدادية والثانوية</p>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>نوع الحساب</label>
+                    <select id="login-role" class="form-control" onchange="toggleRoleFields()">
+                        <option value="student">طالب</option>
+                        <option value="admin">الأستاذ (لوحة التحكم)</option>
+                    </select>
+                </div>
+                <div class="form-group" id="name-group">
+                    <label>اسم الطالب ثلاثي</label>
+                    <input type="text" id="student-name" class="form-control" placeholder="أدخل اسمك بالكامل">
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="password" class="form-control" placeholder="أدخل كلمة المرور" required>
+                </div>
+                <button type="submit" class="btn-primary">دخول المنصة</button>
+            </form>
+            <p style="font-size: 11px; color: var(--text-sub); margin-top: 15px;">كلمة مرور الطالب الافتراضية: <strong>123456</strong></p>
+        </div>
+    </div>
+
+    <!-- 2. واجهة المنصة بعد تسجيل الدخول -->
+    <div id="app-screen" class="hidden">
+        <header class="navbar">
+            <div class="logo-container">
+                <div style="font-size: 24px; color: var(--math-gold); font-weight: bold;">∑π</div>
+                <div class="logo-text">
+                    <h1>منصة الأستاذ عبد العزيز عمر</h1>
+                    <p>المنصة التفاعلية المتخصصة في الرياضيات</p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span id="user-display-name" style="font-size: 14px; font-weight: bold;"></span>
+                <button onclick="logout()" class="option-btn" style="padding: 6px 12px; font-size: 12px; border-color: var(--danger); color: var(--danger);">خروج</button>
+            </div>
+        </header>
+
+        <div class="app-layout">
+            <aside class="sidebar">
+                <nav>
+                    <div class="nav-item active" onclick="switchSection('exams-section', this)">
+                        <i class="fa-solid fa-square-poll-vertical"></i> الامتحانات الشاملة
+                    </div>
+                    <div class="nav-item" onclick="switchSection('homework-section', this)">
+                        <i class="fa-solid fa-book-open"></i> الواجبات المدرسية
+                    </div>
+                    <div id="admin-tab" class="nav-item hidden" onclick="switchSection('admin-section', this)">
+                        <i class="fa-solid fa-users-gear"></i> متابعة نتائج الطلاب
+                    </div>
+                </nav>
+            </aside>
+
+            <main class="main-content">
+
+                <!-- قسم الامتحانات -->
+                <section id="exams-section" class="content-section active">
+                    <h2 class="section-title">امتحان الوحدة الأولى الشامل (20 سؤالاً)</h2>
+                    
+                    <div id="exam-card-wrapper" class="cards-grid">
+                        <div class="card">
+                            <div>
+                                <h3>الامتحان التفاعلي الشامل للوحدة الأولى (الترم الأول)</h3>
+                                <p>يحتوي هذا الامتحان على 20 سؤالاً من المستوى المتوسط والمستويات العليا، تغطي مناهج: أولى إعدادي، تانية إعدادي، ثالثة إعدادي، وأولى ثانوي. الأرقام باللغة الإنجليزية.</p>
+                                <p><strong>زمن الامتحان:</strong> 45 دقيقة | <strong>الدرجة النهائية:</strong> 20 درجة</p>
+                            </div>
+                            <button class="btn-primary" onclick="startExam()">بدء الامتحان الآن</button>
+                        </div>
+                    </div>
+
+                    <!-- شاشة تأدية الامتحان -->
+                    <div id="quiz-modal" class="quiz-modal hidden">
+                        <div class="quiz-header">
+                            <span id="grade-badge" style="color: var(--math-gold); font-weight: bold;"></span>
+                            <span id="quiz-progress">سؤال 1 من 20</span>
+                        </div>
+
+                        <div id="question-box">
+                            <h3 class="question-title" id="quiz-question-text">نص السؤال...</h3>
+                            <div class="options-group" id="quiz-options"></div>
+                            <button class="btn-primary" id="next-btn" onclick="nextQuestion()">السؤال التالي</button>
+                        </div>
+
+                        <div id="score-box" class="score-box hidden" style="text-align: center; padding: 20px;">
+                            <i class="fa-solid fa-award" style="font-size: 50px; color: var(--math-gold);"></i>
+                            <h2 style="margin-top: 15px;">تم إنهاء الامتحان وتسجيل النتيجة!</h2>
+                            <p style="color: var(--text-sub); margin-top: 5px;">درجتك النهائية في امتحان الوحدة الأولى:</p>
+                            <div id="final-score" style="font-size: 42px; color: var(--success); font-weight: bold; margin: 15px 0;">0 / 20</div>
+                            <button class="btn-primary" onclick="resetQuizView()">العودة لقائمة الامتحانات</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- قسم الواجبات -->
+                <section id="homework-section" class="content-section">
+                    <h2 class="section-title">الواجبات المنزلية المطلوبة</h2>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h3>واجب الصف الأول الإعدادي</h3>
+                            <p>حل أسئلة كتاب المعاصر ص 12 إلى 15 على درس الأعداد النسبية والعمليات عليها.</p>
+                            <button class="btn-primary" onclick="alert('تسليم الواجب في كشكول الرياضيات خلال الحصة القادمة للأستاذ عبد العزيز عمر.')">تفاصيل التسليم</button>
+                        </div>
+                        <div class="card">
+                            <h3>واجب الصف الثاني الإعدادي</h3>
+                            <p>حل تمارين الدرس الأول والثاني بالمعاصر ص 18 إلى 22 (الجذور والأعداد الحقيقية).</p>
+                            <button class="btn-primary" onclick="alert('تسليم الواجب في كشكول الرياضيات خلال الحصة القادمة للأستاذ عبد العزيز عمر.')">تفاصيل التسليم</button>
+                        </div>
+                        <div class="card">
+                            <h3>واجب الصف الثالث الإعدادي</h3>
+                            <p>حل تمارين حاصل الضرب الديكارتي والعلاقات والدوال ص 25 إلى 29.</p>
+                            <button class="btn-primary" onclick="alert('تسليم الواجب في كشكول الرياضيات خلال الحصة القادمة للأستاذ عبد العزيز عمر.')">تفاصيل التسليم</button>
+                        </div>
+                        <div class="card">
+                            <h3>واجب الصف الأول الثانوي</h3>
+                            <p>حل أسئلة الأعداد المركبة وتحديد نوع جذري المعادلة التربيعية ص 34 إلى 40.</p>
+                            <button class="btn-primary" onclick="alert('تسليم الواجب في كشكول الرياضيات خلال الحصة القادمة للأستاذ عبد العزيز عمر.')">تفاصيل التسليم</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- قسم متابعة الطلاب (خاص بالأستاذ) -->
+                <section id="admin-section" class="content-section">
+                    <h2 class="section-title">لوحة متابعة درجات ونتائج الطلاب</h2>
+                    <p style="color: var(--text-sub); margin-bottom: 20px;">يتم هنا تسجيل جميع الطلاب الذين أتموا امتحان الوحدة الأولى تلقائياً:</p>
+                    
+                    <div class="table-responsive">
+                        <table class="students-table">
+                            <thead>
+                                <tr>
+                                    <th>اسم الطالب</th>
+                                    <th>الدرجة</th>
+                                    <th>النسبة المئوية</th>
+                                    <th>التقييم</th>
+                                    <th>حالة الاختبار</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-results-body">
+                                <!-- تظهر النتائج هنا -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // قاعدة بيانات وهمية في الذاكرة لتسجيل نتائج الطلاب
+        let currentRole = "student";
+        let currentUser = "";
+        
+        let studentsResults = [
+            { name: "أحمد محمد علي", score: 18, total: 20, percentage: "90%", status: "ممتاز" },
+            { name: "مريم محمود السيد", score: 15, total: 20, percentage: "75%", status: "جيد جداً" }
+        ];
+
+        // 20 سؤالاً على الوحدة الأولى (أولى إعدادي، تانية إعدادي، ثالثة إعدادي، أولى ثانوي) الأرقام بالإنجليزي
+        const examQuestions = [
+            // --- أولى إعدادي (المجموعات والأعداد النسبية) ---
+            { grade: "الصف الأول الإعدادي", q: "1) إذا كان العدد النسبى (a - 3) / (a + 5) = 0 ، فإن قيمة a تساوي:", options: ["3", "-3", "5", "-5"], answer: 0 },
+            { grade: "الصف الأول الإعدادي", q: "2) العدد النسبي الذي ليس له معكوس ضربي من بين الأعداد التالية هو:", options: ["0", "1", "-1", "0.5"], answer: 0 },
+            { grade: "الصف الأول الإعدادي", q: "3) إذا كان 3 / 7 + x = 0 ، فإن المعكوس الجمعي للعدد x هو:", options: ["3 / 7", "-3 / 7", "7 / 3", "-7 / 3"], answer: 0 },
+            { grade: "الصف الأول الإعدادي", q: "4) إذا كان |x| / 5 = 2 / 5 ، فإن قيمة x تساوي:", options: ["2", "-2", "2 أو -2", "10"], answer: 2 },
+            { grade: "الصف الأول الإعدادي", q: "5) عدد الأعداد الصحيحة المحصورة بين 3 / 5 و 8 / 5 هو:", options: ["1", "2", "3", "0"], answer: 0 },
+
+            // --- ثاني إعدادي (الجذور والأعداد الحقيقية) ---
+            { grade: "الصف الثاني الإعدادي", q: "6) مكعب حجمه 27 cm³ ، فإن مساحته الكلية تساوي:", options: ["9 cm²", "36 cm²", "54 cm²", "81 cm²"], answer: 2 },
+            { grade: "الصف الثاني الإعدادي", q: "7) مجموعة حل المعادلة x³ + 8 = 0 في مجموعة الأعداد الحقيقية ℝ هي:", options: ["{-2}", "{2}", "∅", "{-4}"], answer: 0 },
+            { grade: "الصف الثاني الإعدادي", q: "8) إذا كانت x ∈ ℝ وكان 2 < √x < 3 ، فإن x يمكن أن تساوي:", options: ["3", "5", "10", "12"], answer: 1 },
+            { grade: "الصف الثاني الإعدادي", q: "9) المعكوس الضربي للعدد (√5 - 2) في أبسط صورة هو:", options: ["√5 + 2", "2 - √5", "1 / (√5 - 2)", "-√5 - 2"], answer: 0 },
+            { grade: "الصف الثاني الإعدادي", q: "10) إذا كانت الفترتان A = [-2, 3] و B = [1, 5] ، فإن A ∩ B تساوي:", options: ["[1, 3]", "[-2, 5]", "[3, 5]", "[-2, 1]"], answer: 0 },
+
+            // --- ثالث إعدادي (حاصل الضرب الديكارتي والعلاقات) ---
+            { grade: "الصف الثالث الإعدادي", q: "11) إذا كانت النقطه (x - 3, 5) تقع على محور الصادات، فإن x تساوي:", options: ["3", "5", "0", "-3"], answer: 0 },
+            { grade: "الصف الثالث الإعدادي", q: "12) إذا كان n(X) = 3 و n(X × Y) = 12 ، فإن n(Y²) تساوي:", options: ["4", "9", "16", "64"], answer: 2 },
+            { grade: "الصف الثالث الإعدادي", q: "13) إذا كانت النقطة (a, b) تقع في الربع الثالث، فإن النقطة (-a, b²) تقع في الربع:", options: ["الأول", "الثاني", "الثالث", "الرابع"], answer: 0 },
+            { grade: "الصف الثالث الإعدادي", q: "14) إذا كانت R علاقة من X = {1, 2} إلى Y = {3, 4} حيث a R b تعني a + b = 5 ، فإن R تساوي:", options: ["{(1, 4), (2, 3)}", "{(1, 3), (2, 4)}", "{(2, 3)}", "{(1, 4)}"], answer: 0 },
+            { grade: "الصف الثالث الإعدادي", q: "15) إذا كانت f(x) = 3x - b وكانت f(2) = 10 ، فإن قيمة b تساوي:", options: ["-4", "4", "6", "-6"], answer: 0 },
+
+            // --- أولى ثانوي (الجبر والأعداد المركبة) ---
+            { grade: "الصف الأول الثانوي", q: "16) أبسط صورة للعدد التخيلي i⁴³ هي:", options: ["1", "-1", "i", "-i"], answer: 3 },
+            { grade: "الصف الأول الثانوي", q: "17) إذا كان (2x - y) + (x - 2y)i = 5 + 2i ، فإن x + y تساوي:", options: ["1", "3", "-1", "5"], answer: 2 },
+            { grade: "الصف الأول الثانوي", q: "18) حاصل ضرب جذري المعادلة 2x² - 5x - 3 = 0 يساوي:", options: ["5 / 2", "-5 / 2", "-3 / 2", "3 / 2"], answer: 2 },
+            { grade: "الصف الأول الثانوي", q: "19) إذا كان مميز المعادلة ax² + bx + c = 0 أصغر من 0 ، فإن الجذور تكون:", options: ["حقيقية متساوية", "حقيقية مختلفة", "مركبة غير حقيقية", "أعداد صحيحة"], answer: 2 },
+            { grade: "الصف الأول الثانوي", q: "20) إذا كان أحد جذري المعادلة x² - (k - 3)x + 5 = 0 هو معكوس جمعي للآخر، فإن k تساوي:", options: ["3", "-3", "5", "0"], answer: 0 }
+        ];
+
+        let currentQIndex = 0;
+        let userScore = 0;
+        let selectedOption = null;
+
+        function toggleRoleFields() {
+            const role = document.getElementById("login-role").value;
+            const nameGroup = document.getElementById("name-group");
+            if (role === "admin") {
+                nameGroup.classList.add("hidden");
+            } else {
+                nameGroup.classList.remove("hidden");
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const role = document.getElementById("login-role").value;
+            const pass = document.getElementById("password").value;
+            const nameInput = document.getElementById("student-name").value.trim();
+
+            if (role === "admin") {
+                if (pass === "admin123") {
+                    currentRole = "admin";
+                    currentUser = "الأستاذ عبد العزيز عمر";
+                    enterPlatform();
+                } else {
+                    alert("كلمة سر الأدمن خاطئة! (كلمة السر الصحيحة: admin123)");
+                }
+            } else {
+                if (!nameInput) {
+                    alert("يرجى كتابة الاسم بالكامل!");
+                    return;
+                }
+                if (pass === "123456") {
+                    currentRole = "student";
+                    currentUser = nameInput;
+                    enterPlatform();
+                } else {
+                    alert("كلمة المرور خاطئة! (كلمة المرور الافتراضية للطالب: 123456)");
+                }
+            }
+        }
+
+        function enterPlatform() {
+            document.getElementById("login-screen").classList.add("hidden");
+            document.getElementById("app-screen").classList.remove("hidden");
+            document.getElementById("user-display-name").innerText = `${currentUser} (${currentRole === 'admin' ? 'أدمن' : 'طالب'})`;
+
+            if (currentRole === "admin") {
+                document.getElementById("admin-tab").classList.remove("hidden");
+                renderAdminResults();
+            } else {
+                document.getElementById("admin-tab").classList.add("hidden");
+            }
+        }
+
+        function logout() {
+            document.getElementById("app-screen").classList.add("hidden");
+            document.getElementById("login-screen").classList.remove("hidden");
+            document.getElementById("student-name").value = "";
+            document.getElementById("password").value = "";
+        }
+
+        function switchSection(sectionId, element) {
+            document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(sectionId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        function startExam() {
+            currentQIndex = 0;
+            userScore = 0;
+
+            document.getElementById("exam-card-wrapper").classList.add("hidden");
+            document.getElementById("quiz-modal").classList.remove("hidden");
+            document.getElementById("score-box").classList.add("hidden");
+            document.getElementById("question-box").classList.remove("hidden");
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            selectedOption = null;
+            const qData = examQuestions[currentQIndex];
+
+            document.getElementById("grade-badge").innerText = qData.grade;
+            document.getElementById("quiz-progress").innerText = `سؤال ${currentQIndex + 1} من ${examQuestions.length}`;
+            document.getElementById("quiz-question-text").innerText = qData.q;
+
+            const optionsBox = document.getElementById("quiz-options");
+            optionsBox.innerHTML = "";
+
+            qData.options.forEach((opt, idx) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedOption = idx;
+                };
+                optionsBox.appendChild(btn);
+            });
+
+            document.getElementById("next-btn").innerText = (currentQIndex === examQuestions.length - 1) ? "إنهاء الامتحان وتسليم الإجابات" : "السؤال التالي";
+        }
+
+        function nextQuestion() {
+            if (selectedOption === null) {
+                alert("يرجى اختيار إجابة أولاً قبل الانتقال للسؤال التالي!");
+                return;
+            }
+
+            if (selectedOption === examQuestions[currentQIndex].answer) {
+                userScore++;
+            }
+
+            currentQIndex++;
+
+            if (currentQIndex < examQuestions.length) {
+                loadQuestion();
+            } else {
+                finishExam();
+            }
+        }
+
+        function finishExam() {
+            document.getElementById("question-box").classList.add("hidden");
+            document.getElementById("score-box").classList.remove("hidden");
+            document.getElementById("final-score").innerText = `${userScore} / ${examQuestions.length}`;
+
+            // تسجيل نتيجة الطالب في القائمة
+            const percentageVal = Math.round((userScore / examQuestions.length) * 100);
+            let statusText = "ممتاز";
+            if (percentageVal < 50) statusText = "ضعيف";
+            else if (percentageVal < 70) statusText = "مقبول";
+            else if (percentageVal < 85) statusText = "جيد جداً";
+
+            if (currentRole === "student") {
+                studentsResults.push({
+                    name: currentUser,
+                    score: userScore,
+                    total: examQuestions.length,
+                    percentage: `${percentageVal}%`,
+                    status: statusText
+                });
+            }
+            renderAdminResults();
+        }
+
+        function resetQuizView() {
+            document.getElementById("quiz-modal").classList.add("hidden");
+            document.getElementById("exam-card-wrapper").classList.remove("hidden");
+        }
+
+        function renderAdminResults() {
+            const tbody = document.getElementById("students-results-body");
+            tbody.innerHTML = "";
+
+            studentsResults.forEach(st => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>${st.name}</strong></td>
+                    <td>${st.score} / ${st.total}</td>
+                    <td>${st.percentage}</td>
+                    <td><span class="badge ${st.score >= 10 ? 'success' : 'danger'}">${st.status}</span></td>
+                    <td><span class="badge success">تم التسليم</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
